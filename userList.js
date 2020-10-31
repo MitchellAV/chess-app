@@ -20,4 +20,10 @@ UserList.prototype.getUserList = function () {
 	return this.activeUsers;
 };
 
+UserList.prototype.getCurrentUser = function (id) {
+	return this.activeUsers.find((user) => {
+		return user.id == id;
+	});
+};
+
 module.exports = UserList;

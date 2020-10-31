@@ -38,7 +38,10 @@ io.on("connection", (socket) => {
 
 	// Listen for chat message
 	socket.on("chatMessage", (msg) => {
-		io.emit("message", msg);
+		const user = activeUsers.getCurrentUser(socket.id);
+		if (user) {
+			io.emit("message", `${user.username}: ${msg}`);
+		}
 	});
 });
 

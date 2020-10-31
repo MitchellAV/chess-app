@@ -4,8 +4,7 @@ var square_js_1 = require("./square.js");
 var game_js_1 = require("./game.js");
 var player_js_1 = require("./player.js");
 var c = require("./constants.js");
-var chessboard = document.getElementById('chessboard');
-chessboard.style.cssText = "width: " + c.GAME_SIZE + "px;height:" + c.GAME_SIZE + "px;";
+var chessboard = document.getElementById("chessboard");
 var player1 = new player_js_1.Player(true, true);
 var player2 = new player_js_1.Player(false, false);
 var game = new game_js_1.Game(player1, player2);
@@ -26,12 +25,14 @@ chessboard.addEventListener("mousedown", function (e) {
     if (clicked === false) {
         start.setX(mouse.x);
         start.setY(mouse.y);
-        start.setPiece(game.getBoard().getPiece(start));
-        clicked = true;
-        clickedPiece = game.getBoard().getPieceColor(start);
-        if (clickedPiece == game.getCurrentTurn().isWhitePlayer()) {
-            // highlight spaces to move to
-            game.getBoard().highlightMoves(start);
+        if (game.getBoard().getPiece(start) !== null) {
+            start.setPiece(game.getBoard().getPiece(start));
+            clicked = true;
+            clickedPiece = game.getBoard().getPieceColor(start);
+            if (clickedPiece == game.getCurrentTurn().isWhitePlayer()) {
+                // highlight spaces to move to
+                game.getBoard().highlightMoves(start);
+            }
         }
     }
 });
@@ -49,7 +50,7 @@ chessboard.addEventListener("mouseup", function (e) {
         end.setY(mouse.y);
         end.setPiece(game.getBoard().getPiece(end));
         if (clickedPiece == game.getCurrentTurn().isWhitePlayer()) {
-            game.makeMove(game.getCurrentTurn(), start, end);
+            game.playerMove(game.getCurrentTurn(), start, end);
         }
         // move piece and update board
         // console.log(start, end);

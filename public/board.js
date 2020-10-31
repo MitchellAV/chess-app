@@ -92,7 +92,9 @@ export class Board {
         }
     }
     getPieceColor(location) {
-        return this.boardState[location.getY()][location.getX()].getPiece().isWhitePiece();
+        return this.boardState[location.getY()][location.getX()]
+            .getPiece()
+            .isWhitePiece();
     }
     getPiece(location) {
         return this.boardState[location.getY()][location.getX()].getPiece();
@@ -146,39 +148,26 @@ export class Board {
         }
         c.ctx.restore();
     }
-    // evalBoard() {
-    // 	let score: number = 0;
-    // 	let totalScore: number = 0;
-    // 	let players = [this.blackPlayer, this.whitePlayer];
-    // 	players.forEach((player) => {
-    // 		player.getActivePieces().forEach((piece) => {
-    // 			switch (piece.getType()) {
-    // 				case ChessPiece.KING:
-    // 					score = 1000;
-    // 					break;
-    // 				case ChessPiece.QUEEN:
-    // 					score = 90;
-    // 					break;
-    // 				case ChessPiece.ROOK:
-    // 					score = 50;
-    // 					break;
-    // 				case ChessPiece.BISHOP:
-    // 					score = 30;
-    // 					break;
-    // 				case ChessPiece.KNIGHT:
-    // 					score = 30;
-    // 					break;
-    // 				case ChessPiece.PAWN:
-    // 					score = 10;
-    // 					break;
-    // 				default:
-    // 					break;
-    // 			}
-    // 			totalScore += piece.value + score;
-    // 		});
-    // 	});
-    // 	return totalScore;
-    // }
+    evalBoard(whiteToMove) {
+        let whiteScore = 0;
+        let blackScore = 0;
+        let players = [this.whitePlayer, this.blackPlayer];
+        players.forEach((player) => {
+            player.getActivePieces().forEach((piece) => {
+                if (player.isWhitePlayer()) {
+                    whiteScore += piece.getValue();
+                }
+                else {
+                    blackScore += piece.getValue();
+                }
+            });
+        });
+        let toMove = -1;
+        if (whiteToMove == true) {
+            toMove = 1;
+        }
+        return (whiteScore - blackScore) * toMove;
+    }
     updateCanvas() {
         this.drawBoard();
         this.updatePieces();

@@ -1,5 +1,6 @@
 import { Square } from "../square.js";
 import { Piece } from "../piece.js";
+import { Queen } from "../pieces/queen.js";
 import { ChessPiece } from "../enums.js";
 export class Pawn extends Piece {
     constructor(player, board, x, y) {
@@ -46,16 +47,22 @@ export class Pawn extends Piece {
                 if (left >= 0) {
                     leftPiece = this.boardState[up][left].getPiece();
                     let endSquare = new Square(left, up, null);
-                    if (leftPiece != null && leftPiece.isWhitePiece() != this.isWhitePiece()) {
+                    if (leftPiece != null &&
+                        leftPiece.isWhitePiece() != this.isWhitePiece()) {
                         avaliableMoves.push(endSquare);
                     }
                 }
                 if (right <= 7) {
                     rightPiece = this.boardState[up][right].getPiece();
                     let endSquare = new Square(right, up, null);
-                    if (rightPiece != null && rightPiece.isWhitePiece() != this.isWhitePiece()) {
+                    if (rightPiece != null &&
+                        rightPiece.isWhitePiece() != this.isWhitePiece()) {
                         avaliableMoves.push(endSquare);
                     }
+                }
+                if (this.y == 0) {
+                    this.board
+                        .getBoardState()[this.y][this.x].setPiece(new Queen(this.player, this.board, this.x, this.y));
                 }
             }
             // Move toward black side
@@ -81,19 +88,21 @@ export class Pawn extends Piece {
                 if (left >= 0) {
                     leftPiece = this.boardState[down][left].getPiece();
                     let endSquare = new Square(left, down, null);
-                    if (leftPiece != null && leftPiece.isWhitePiece() != this.isWhitePiece()) {
+                    if (leftPiece != null &&
+                        leftPiece.isWhitePiece() != this.isWhitePiece()) {
                         avaliableMoves.push(endSquare);
                     }
                 }
                 if (right <= 7) {
                     rightPiece = this.boardState[down][right].getPiece();
                     let endSquare = new Square(right, down, null);
-                    if (rightPiece != null && rightPiece.isWhitePiece() != this.isWhitePiece()) {
+                    if (rightPiece != null &&
+                        rightPiece.isWhitePiece() != this.isWhitePiece()) {
                         avaliableMoves.push(endSquare);
                     }
                 }
             }
-            // Move toward black side
+            // Move toward white side
             for (let row = this.y + 1; row <= this.y + gap; row++) {
                 if (row < 0 || row > 7) {
                     continue;
@@ -104,6 +113,10 @@ export class Pawn extends Piece {
                     break;
                 }
                 avaliableMoves.push(endSquare);
+            }
+            if (this.y == 7) {
+                this.board
+                    .getBoardState()[this.y][this.x].setPiece(new Queen(this.player, this.board, this.x, this.y));
             }
         }
         this.validMoves = avaliableMoves;

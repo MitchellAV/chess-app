@@ -37,7 +37,27 @@ export class Game {
     getBoard() {
         return this.board;
     }
-    makeMove(player, start, end) {
+    getNextTurn(currentTurn) {
+        if (currentTurn == this.blackPlayer) {
+            return this.whitePlayer;
+        }
+        else {
+            return this.blackPlayer;
+        }
+    }
+    movePiece(board, startPiece, end) {
+        board
+            .getBoardState()[startPiece.getY()][startPiece.getX()].setPiece(null);
+        board.getBoardState()[end.getY()][end.getX()].setPiece(startPiece);
+        startPiece.setX(end.getX());
+        startPiece.setY(end.getY());
+        startPiece.setPieceMoved(true);
+        startPiece.updateValue(startPiece.getX(), startPiece.getY());
+        board.updateAllValidMoves();
+    }
+    playerMove(player, start, end) {
+        if (this.gameStatus != GameStatus.ACTIVE)
+            return;
         let startPiece = this.board
             .getBoardState()[start.getY()][start.getX()].getPiece();
         if (startPiece === null) {
@@ -50,7 +70,8 @@ export class Game {
             let move = new Move(player, start, end);
             this.moveList.push(move);
             // Castling
-            if (startPiece.getType() === ChessPiece.KING && startPiece.hasPieceMoved() === false) {
+            if (startPiece.getType() === ChessPiece.KING &&
+                startPiece.hasPieceMoved() === false) {
                 if (end.getY() == 7) {
                     if (end.getX() == 2) {
                         let rook = this.board.getBoardState()[7][0].getPiece();
@@ -96,14 +117,8 @@ export class Game {
                     }
                 }
             }
-            startPiece.setPieceMoved(true);
-            startPiece.setX(end.getX());
-            startPiece.setY(end.getY());
-            this.board.getBoardState()[start.getY()][start.getX()].setPiece(null);
-            this.board.getBoardState()[end.getY()][end.getX()].setPiece(startPiece);
-            this.board.updateAllValidMoves();
-            startPiece.updateValue(startPiece.getX(), startPiece.getY());
-            // console.log(this.board.boardState);
+            this.movePiece(this.board, startPiece, end);
+            console.log(this.board.getBoardState());
             let lastMove = move.getPieceCaptured();
             if (lastMove != null) {
                 if (lastMove.getType() == ChessPiece.KING) {
@@ -128,7 +143,7 @@ export class Game {
         }
     }
     setStatus(status) {
-        console.log(status);
+        this.gameStatus = status;
     }
     randomMove(computer) {
         function random_item(items) {
@@ -140,7 +155,7 @@ export class Game {
                 let startMove = this.board.getBoardState()[startPiece.getY()][startPiece.getX()];
                 let endPiece = random_item(startPiece.getValidMoves());
                 let endMove = this.board.getBoardState()[endPiece.getY()][endPiece.getX()];
-                this.makeMove(computer, startMove, endMove);
+                this.playerMove(computer, startMove, endMove);
             }
             else {
                 this.randomMove(computer);

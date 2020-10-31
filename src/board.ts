@@ -54,7 +54,11 @@ export class Board {
 
 	initDrawPieces() {
 		for (let row = 0; row < this.initBoardState.length; row++) {
-			for (let column = 0; column < this.initBoardState[row].length; column++) {
+			for (
+				let column = 0;
+				column < this.initBoardState[row].length;
+				column++
+			) {
 				let tile = this.initBoardState[row][column];
 				let playerPiece = new Player(true, true);
 				if (tile[0] === "b") {
@@ -67,42 +71,42 @@ export class Board {
 						this.boardState[row][column] = new Square(
 							column,
 							row,
-							new Bishop(playerPiece, this,  column, row)
+							new Bishop(playerPiece, this, column, row)
 						);
 						break;
 					case "Q":
 						this.boardState[row][column] = new Square(
 							column,
 							row,
-							new Queen(playerPiece, this,  column, row)
+							new Queen(playerPiece, this, column, row)
 						);
 						break;
 					case "N":
 						this.boardState[row][column] = new Square(
 							column,
 							row,
-							new Knight(playerPiece, this,  column, row)
+							new Knight(playerPiece, this, column, row)
 						);
 						break;
 					case "K":
 						this.boardState[row][column] = new Square(
 							column,
 							row,
-							new King(playerPiece, this,  column, row)
+							new King(playerPiece, this, column, row)
 						);
 						break;
 					case "R":
 						this.boardState[row][column] = new Square(
 							column,
 							row,
-							new Rook(playerPiece, this,  column, row)
+							new Rook(playerPiece, this, column, row)
 						);
 						break;
 					case "P":
 						this.boardState[row][column] = new Square(
 							column,
 							row,
-							new Pawn(playerPiece, this,  column, row)
+							new Pawn(playerPiece, this, column, row)
 						);
 						break;
 				}
@@ -118,14 +122,20 @@ export class Board {
 						}
 					}
 				} else {
-					this.boardState[row][column] = new Square(column, row, null);
+					this.boardState[row][column] = new Square(
+						column,
+						row,
+						null
+					);
 				}
 			}
 		}
 	}
 
 	getPieceColor(location: Square) {
-		return this.boardState[location.getY()][location.getX()].getPiece()!.isWhitePiece();
+		return this.boardState[location.getY()][location.getX()]
+			.getPiece()!
+			.isWhitePiece();
 	}
 
 	getPiece(location: Square) {
@@ -134,7 +144,11 @@ export class Board {
 
 	updateAllValidMoves() {
 		for (let row = 0; row < this.boardState.length; row++) {
-			for (let column = 0; column < this.boardState[row].length; column++) {
+			for (
+				let column = 0;
+				column < this.boardState[row].length;
+				column++
+			) {
 				let piece = this.boardState[row][column].getPiece();
 				if (piece != null) {
 					piece.updateValidMoves();
@@ -148,7 +162,7 @@ export class Board {
 		if (startPiece === null) {
 			return;
 		}
-		
+
 		startPiece.getValidMoves().forEach((move) => {
 			c.ctx!.save();
 			c.ctx!.globalAlpha = 0.2;
@@ -165,7 +179,11 @@ export class Board {
 
 	updatePieces() {
 		for (let row = 0; row < this.boardState.length; row++) {
-			for (let column = 0; column < this.boardState[row].length; column++) {
+			for (
+				let column = 0;
+				column < this.boardState[row].length;
+				column++
+			) {
 				let piece = this.boardState[row][column].getPiece();
 				if (piece != null) {
 					piece.draw();
@@ -195,40 +213,25 @@ export class Board {
 		c.ctx!.restore();
 	}
 
-	// evalBoard() {
-	// 	let score: number = 0;
-	// 	let totalScore: number = 0;
-	// 	let players = [this.blackPlayer, this.whitePlayer];
-	// 	players.forEach((player) => {
-	// 		player.getActivePieces().forEach((piece) => {
-	// 			switch (piece.getType()) {
-	// 				case ChessPiece.KING:
-	// 					score = 1000;
-	// 					break;
-	// 				case ChessPiece.QUEEN:
-	// 					score = 90;
-	// 					break;
-	// 				case ChessPiece.ROOK:
-	// 					score = 50;
-	// 					break;
-	// 				case ChessPiece.BISHOP:
-	// 					score = 30;
-	// 					break;
-	// 				case ChessPiece.KNIGHT:
-	// 					score = 30;
-	// 					break;
-	// 				case ChessPiece.PAWN:
-	// 					score = 10;
-	// 					break;
-	// 				default:
-	// 					break;
-	// 			}
-				
-	// 			totalScore += piece.value + score;
-	// 		});
-	// 	});
-	// 	return totalScore;
-	// }
+	evalBoard(whiteToMove: boolean) {
+		let whiteScore: number = 0;
+		let blackScore: number = 0;
+		let players = [this.whitePlayer, this.blackPlayer];
+		players.forEach((player) => {
+			player.getActivePieces().forEach((piece) => {
+				if (player.isWhitePlayer()) {
+					whiteScore += piece.getValue();
+				} else {
+					blackScore += piece.getValue();
+				}
+			});
+		});
+		let toMove = -1;
+		if (whiteToMove == true) {
+			toMove = 1;
+		}
+		return (whiteScore - blackScore) * toMove;
+	}
 
 	updateCanvas() {
 		this.drawBoard();

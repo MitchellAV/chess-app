@@ -1,6 +1,42 @@
 body {
+	height: 100vh;
+	background-color: lightblue;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+canvas {
+	image-rendering: smooth;
+}
+#chat {
+	background: gray;
+	height: 600px;
+	width: 400px;
+	margin-left: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
 
-    background-color: black;
-    display: flex;
-    justify-content: center;
+#chat-form {
+	background: white;
+	padding: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+#msg-box {
+	resize: none;
+	width: 100%;
+}
+
+#chat-log {
+	overflow-y: scroll;
+}
+.message {
+	background: white;
+	padding: 0 1rem;
+	margin: 1rem 0;
 }

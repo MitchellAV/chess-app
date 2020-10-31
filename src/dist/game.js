@@ -40,7 +40,19 @@ var Game = /** @class */ (function () {
     Game.prototype.getBoard = function () {
         return this.board;
     };
-    Game.prototype.makeMove = function (player, start, end) {
+    Game.prototype.movePiece = function (startPiece, end) {
+        this.board
+            .getBoardState()[startPiece.getY()][startPiece.getX()].setPiece(null);
+        this.board.getBoardState()[end.getY()][end.getX()].setPiece(startPiece);
+        startPiece.setX(end.getX());
+        startPiece.setY(end.getY());
+        startPiece.setPieceMoved(true);
+        startPiece.updateValue(startPiece.getX(), startPiece.getY());
+        this.board.updateAllValidMoves();
+    };
+    Game.prototype.playerMove = function (player, start, end) {
+        if (this.gameStatus != enums_js_1.GameStatus.ACTIVE)
+            return;
         var startPiece = this.board
             .getBoardState()[start.getY()][start.getX()].getPiece();
         if (startPiece === null) {
@@ -53,7 +65,8 @@ var Game = /** @class */ (function () {
             var move = new move_js_1.Move(player, start, end);
             this.moveList.push(move);
             // Castling
-            if (startPiece.getType() === enums_js_1.ChessPiece.KING && startPiece.hasPieceMoved() === false) {
+            if (startPiece.getType() === enums_js_1.ChessPiece.KING &&
+                startPiece.hasPieceMoved() === false) {
                 if (end.getY() == 7) {
                     if (end.getX() == 2) {
                         var rook = this.board.getBoardState()[7][0].getPiece();
@@ -99,14 +112,8 @@ var Game = /** @class */ (function () {
                     }
                 }
             }
-            startPiece.setPieceMoved(true);
-            startPiece.setX(end.getX());
-            startPiece.setY(end.getY());
-            this.board.getBoardState()[start.getY()][start.getX()].setPiece(null);
-            this.board.getBoardState()[end.getY()][end.getX()].setPiece(startPiece);
-            this.board.updateAllValidMoves();
-            startPiece.updateValue(startPiece.getX(), startPiece.getY());
-            // console.log(this.board.boardState);
+            this.movePiece(startPiece, end);
+            console.log(this.board.getBoardState());
             var lastMove = move.getPieceCaptured();
             if (lastMove != null) {
                 if (lastMove.getType() == enums_js_1.ChessPiece.KING) {
@@ -131,7 +138,7 @@ var Game = /** @class */ (function () {
         }
     };
     Game.prototype.setStatus = function (status) {
-        console.log(status);
+        this.gameStatus = status;
     };
     Game.prototype.randomMove = function (computer) {
         function random_item(items) {
@@ -143,7 +150,7 @@ var Game = /** @class */ (function () {
                 var startMove = this.board.getBoardState()[startPiece.getY()][startPiece.getX()];
                 var endPiece = random_item(startPiece.getValidMoves());
                 var endMove = this.board.getBoardState()[endPiece.getY()][endPiece.getX()];
-                this.makeMove(computer, startMove, endMove);
+                this.playerMove(computer, startMove, endMove);
             }
             else {
                 this.randomMove(computer);

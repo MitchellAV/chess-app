@@ -3,12 +3,13 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "app.js",
-	"dependencies": {},
+	"dependencies": {
+		"express": "^4.17.1",
+		"socket.io": "^2.3.0"
+	},
 	"devDependencies": {
 		"concurrently": "^5.3.0",
-		"express": "^4.17.1",
-		"nodemon": "^2.0.5",
-		"socket.io": "^2.3.0"
+		"nodemon": "^2.0.5"
 	},
 	"scripts": {
 		"watch-server": "nodemon app.js",

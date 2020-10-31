@@ -5,12 +5,11 @@
 	"main": "app.js",
 	"dependencies": {
 		"express": "^4.17.1",
-		"socket.io": "^2.3.0"
-	},
-	"devDependencies": {
+		"socket.io": "^2.3.0",
 		"concurrently": "^5.3.0",
 		"nodemon": "^2.0.5"
 	},
+	"devDependencies": {},
 	"scripts": {
 		"watch-server": "nodemon app.js",
 		"watch-typescript": "tsc -w",
